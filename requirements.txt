@@ -1,0 +1,7 @@
+pandas
+fredapi
+requests
+python-dotenv
+jupyter
+matplotlib
+seaborn
