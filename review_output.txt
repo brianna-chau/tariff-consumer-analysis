@@ -1,0 +1,291 @@
+==============================================================
+                    TARIFF IMPACT SUMMARY                     
+  Pre-tariff: Jan 2022 – Mar 2025  |  Post-tariff: Apr–Dec 2025
+==============================================================
+Metric                   Pre-Tariff Post-Tariff   % Change
+--------------------------------------------------------------
+CPI Food                     320.84      340.83 ▲     6.2%
+CPI Apparel                  129.87      131.61 ▲     1.3%
+Consumer Sentiment            65.53       55.29 ▼    15.6%
+WMT Adj Close ($)             57.60      100.94 ▲    75.3%
+DG Adj Close ($)             155.87      105.49 ▼    32.3%
+--------------------------------------------------------------
+
+Better post-tariff retailer : WMT
+  WMT avg change            : ▲75.3%
+  DG  avg change            : ▼32.3%
+
+Biggest food CPI monthly jump: Jul 2022 (+1.14%)
+==============================================================
+
+Saved summary -> /Users/rchau/Desktop/tariff-consumer-analysis/data/processed/insights_summary.csv
+
+======================================================================
+                         UNEXPECTED FINDINGS                          
+======================================================================
+
+[Finding 1 of 2]  WMT vs DG Post-Tariff Divergence
+----------------------------------------------------------------------
+
+ORIGINAL EXPECTATION:
+  Discount retailers like Dollar General would outperform in a tariff/
+  inflation environment as consumers trade down to lower-cost channels.
+
+WHAT DATA SHOWED:
+  WMT ▲75.3% vs DG ▼32.3% post-tariff — a 108 percentage-point spread
+  in the opposite direction of the hypothesis.
+
+POSSIBLE EXPLANATIONS:
+  1. Walmart's supply-chain scale and import diversification let it
+     renegotiate supplier contracts faster than smaller peers.
+  2. Dollar General's rural, fixed-income customer base was squeezed
+     by food inflation, leaving little room to absorb or pass on costs.
+  3. Walmart's grocery dominance (largest U.S. food retailer) provided
+     volume leverage to offset margin compression on imported goods.
+  4. Dollar General's mix skews toward discretionary/non-staples, making
+     it more exposed to demand pullback when household budgets tighten.
+
+BUSINESS IMPLICATION:
+  Scale and supply-chain flexibility matter more than customer demographics
+  in a tariff shock. A sourcing manager at a mid-size retailer should
+  prioritize supplier diversification and private-label depth over assuming
+  that a value-oriented customer base is a natural hedge against inflation.
+
+----------------------------------------------------------------------
+
+[Finding 2 of 2]  Food CPI Spike Predates the Tariff Period
+----------------------------------------------------------------------
+
+ORIGINAL EXPECTATION:
+  The largest single-month food CPI jump would fall in or just after
+  April 2025, when tariff costs first propagated through supply chains.
+
+WHAT DATA SHOWED:
+  Largest monthly food CPI jump: Jul 2022 (+1.14% MoM),
+  occurring before the April 2025 tariff period.
+
+POSSIBLE EXPLANATIONS:
+  1. Post-COVID supply chain disruptions and the Russia-Ukraine war drove
+     commodity prices sharply in mid-2022, producing a more acute single-
+     month spike than the 2025 tariff pass-through.
+  2. The April 2025 tariffs compounded an already-elevated price baseline,
+     producing a sustained lift rather than a concentrated monthly shock.
+  3. CPI captures retail shelf prices with a publication lag; tariff costs
+     likely spread across multiple months rather than concentrating in one.
+
+BUSINESS IMPLICATION:
+  Tariff-driven food inflation is slower and more diffuse than commodity
+  shocks. Retail pricing and sourcing managers should plan for sustained
+  margin pressure over 6-12 months rather than a single repricing event,
+  and model cost curves using multi-month rolling windows, not spot peaks.
+
+======================================================================
+
+======================================================================
+                       ALTERNATIVE EXPLANATIONS                       
+======================================================================
+  Testing whether observed CPI and sentiment shifts could be explained
+  by causes other than the April 2025 tariff implementation.
+
+[Alt 1 of 4]  General Inflation (not tariffs)
+----------------------------------------------------------------------
+
+ALTERNATIVE_EXPLANATION:
+  Food prices were already rising at the same rate before April 2025,
+  so the post-tariff increase reflects a continuation of a pre-existing
+  trend rather than a tariff-specific shock.
+
+DATA_TEST:
+  Avg monthly food CPI change  pre-tariff : +0.405% MoM
+  Avg monthly food CPI change post-tariff : +0.198% MoM
+  MoM rate change post-tariff             : -0.207 percentage points
+
+VERDICT:
+  Inconclusive — and notably, the MoM rate decelerated post-tariff,
+  not accelerated. The +6.2% aggregate figure is a level comparison
+  across unequal windows (39 pre-tariff months vs 9 post-tariff months)
+  and is partly driven by the elevated 2022-23 post-COVID baseline.
+  General inflation cannot be ruled out as a co-contributor.
+
+[Alt 2 of 4]  Exchange Rate Effects
+----------------------------------------------------------------------
+
+ALTERNATIVE_EXPLANATION:
+  A weakening USD raised import prices broadly across all categories,
+  accounting for the food CPI rise independently of tariff policy.
+
+DATA_TEST:
+  Cannot be directly tested — no FX data in the current dataset.
+  A weakening USD would affect import prices broadly, not selectively.
+  The category divergence (food +6.2% vs apparel +1.3%) is difficult
+  to explain through FX alone, since both are import-exposed. This
+  remains unconfirmed without USD/CNY, USD/EUR, or trade-weighted
+  dollar index data.
+
+VERDICT:
+  DATA LIMITATION — flag for future analysis. Recommended addition:
+  pull the trade-weighted USD index from FRED series DTWEXBGS and test
+  correlation with post-tariff food CPI MoM changes.
+
+[Alt 3 of 4]  Consumer Demand Shift
+----------------------------------------------------------------------
+
+ALTERNATIVE_EXPLANATION:
+  Falling consumer sentiment caused households to reduce spending,
+  creating demand-side pressure that independently affected retail
+  prices and stock performance — rather than tariffs driving both.
+
+DATA_TEST:
+  Correlation MoM changes — contemporaneous              : +0.018
+  Correlation MoM changes — sentiment leads CPI by 1 mo : +0.013
+  Correlation MoM changes — CPI leads sentiment by 1 mo : -0.197
+  Lead/lag conclusion: food CPI changes tend to PRECEDE sentiment changes by ~1 month.
+
+VERDICT:
+  Partially contradicted as a standalone explanation. CPI changes lead
+  sentiment drops by ~1 month, consistent with rising food prices causing
+  consumer pessimism rather than demand destruction causing price moves.
+  Demand shift likely amplifies the tariff effect rather than causing it.
+
+[Alt 4 of 4]  Inventory Cycles / Supply Chain Lag
+----------------------------------------------------------------------
+
+ALTERNATIVE_EXPLANATION:
+  Retailers drew down pre-tariff inventory in the post-April 2025 window,
+  delaying the true cost impact. Observed price and stock moves reflect
+  inventory positioning rather than steady-state tariff pass-through.
+
+DATA_TEST:
+  Cannot be directly tested — no SKU-level inventory or gross margin
+  data in the current dataset. The 9-month post-tariff window (Apr–Dec
+  2025) falls plausibly within a typical inventory cycle for food and
+  apparel, making it impossible to distinguish drawdown from repricing.
+
+VERDICT:
+  DATA LIMITATION — cannot confirm or refute with available data.
+  Recommended addition: layer in quarterly gross margin data from WMT
+  and DG 10-Q filings. If margins compress in Q2 2025 but recover in
+  Q3–Q4, it would suggest inventory absorption rather than pass-through.
+
+----------------------------------------------------------------------
+                              CONCLUSION                              
+----------------------------------------------------------------------
+
+  Important framing correction: the +6.2% food CPI figure is a level
+  comparison across unequal windows (39 months pre-tariff vs 9 months
+  post-tariff), not a rate acceleration. The monthly food CPI rate
+  decelerated by 0.207 pp post-April 2025 — the post-COVID
+  inflation surge was already cooling before tariffs took effect.
+
+  The honest argument is narrower: tariffs likely sustained an already-
+  elevated food price level rather than triggering a new shock. Without
+  a tariff floor, continued disinflation would have been the expected
+  trajectory, consistent with the decelerating pre-tariff MoM trend.
+
+  The strongest remaining signal is category differentiation. A broad
+  macro force — general inflation, FX weakness, demand contraction —
+  would affect food and apparel similarly. The 4.9 pp gap (6.2% food
+  vs 1.3% apparel) in aggregate levels is more consistent with
+  targeted tariff exposure than with any alternative explanation tested.
+
+  Exchange rate and inventory-cycle effects remain untested. A boundary-
+  specific test (Mar 2025 vs Dec 2025 directly) and quarterly gross margin
+  data from retailer 10-Qs would materially strengthen or refute the
+  sustained-level hypothesis.
+
+======================================================================
+
+======================================================================
+                             LIMITATIONS                              
+======================================================================
+
+1. NO FIRM-LEVEL PRICING DATA
+   CPI reflects retail shelf prices as reported by BLS surveyors. This
+   dataset cannot determine whether observed price increases were absorbed
+   by retailer margins, passed through fully to consumers, or split between
+   the two. Gross margin data from quarterly 10-Q filings would be required
+   to answer the pass-through question directly.
+
+2. CPI IS CATEGORY-LEVEL, NOT PRODUCT-LEVEL
+   The food CPI (CPIUFDNS) and apparel CPI (CPIAPPNS) are basket averages.
+   Individual product price moves — e.g. tariff-exposed categories like
+   canned goods or imported clothing — may diverge significantly from the
+   basket. A product-level scanner dataset would provide higher resolution.
+
+3. CORRELATION WITH TARIFF TIMING DOES NOT PROVE CAUSATION
+   The April 2025 tariff announcement coincided with other macroeconomic
+   events: continued Federal Reserve policy adjustments, consumer credit
+   tightening, and residual post-COVID supply chain normalization. This
+   analysis cannot isolate the tariff effect from concurrent variables
+   without a control group or difference-in-differences design.
+
+4. POST-TARIFF WINDOW IS ONLY 9 MONTHS (APR–DEC 2025)
+   Nine months is insufficient to observe long-run equilibrium pricing.
+   Supply chains reprice on 6–18 month cycles; retailer contract
+   renegotiations and private-label substitutions take time to flow
+   through to shelf prices. Averages over this window may capture
+   transition dynamics rather than a new steady state.
+
+5. FRED DATA LAG — OCTOBER 2025 CPI FORWARD-FILLED
+   BLS CPI series carry a publication lag of 3–6 weeks. The October 2025
+   values for food and apparel CPI were not yet published at time of data
+   collection and were forward-filled from September 2025 (see cleaning
+   step in 02_cleaning.py). Post-tariff averages that include Oct 2025
+   should be treated with caution; the true October value may differ.
+
+======================================================================
+
+======================================================================
+                          WHAT WE GOT WRONG                           
+======================================================================
+
+HYPOTHESIS:
+  Food prices would spike most sharply in the months immediately following
+  the April 2025 tariff announcement, as supply chains repriced imported
+  inputs and retailers passed costs through to shelf prices.
+
+WHAT DATA SHOWED:
+  The single largest monthly food CPI jump in the dataset was
+  July 2022 (+1.14% MoM) — during the post-pandemic
+  inflation surge, nearly three years before the tariff period.
+  Post-tariff monthly food CPI increases were real and sustained,
+  but modest relative to the 2022 peaks. The tariff period produced
+  no single month that approached the 2022 spike magnitude.
+
+WHY THIS MATTERS:
+  Acknowledging where the signal was weaker than expected strengthens
+  the credibility of findings where the signal was strong. The WMT/DG
+  stock divergence and the consumer sentiment drop are robust observations.
+  Overstating the food CPI spike story would undermine confidence in
+  those better-supported findings. Intellectual honesty about the limits
+  of a result is part of what makes the stronger results trustworthy.
+
+IMPLICATION FOR ANALYSIS:
+  Tariff effects on food CPI appear to be gradual and accumulating rather
+  than a sharp one-month shock. This changes the appropriate analytical
+  frame: instead of looking for a spike at the tariff boundary, the right
+  test is whether the post-tariff price level remained elevated relative
+  to the pre-tariff disinflation trend — which the data does support.
+
+======================================================================
+Saved chart -> /Users/rchau/Desktop/tariff-consumer-analysis/data/processed/retailer_comparison.png
+Traceback (most recent call last):
+  File "/Users/rchau/Desktop/tariff-consumer-analysis/notebooks/03_analysis.py", line 435, in <module>
+    plt.show()
+    ~~~~~~~~^^
+  File "/Users/rchau/miniconda3/lib/python3.13/site-packages/matplotlib/pyplot.py", line 613, in show
+    return _get_backend_mod().show(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/rchau/miniconda3/lib/python3.13/site-packages/matplotlib/backend_bases.py", line 3550, in show
+    cls.mainloop()
+    ~~~~~~~~~~~~^^
+  File "/Users/rchau/miniconda3/lib/python3.13/site-packages/matplotlib/backends/backend_macosx.py", line 179, in start_main_loop
+    with _allow_interrupt_macos():
+         ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/rchau/miniconda3/lib/python3.13/contextlib.py", line 148, in __exit__
+    next(self.gen)
+    ~~~~^^^^^^^^^^
+  File "/Users/rchau/miniconda3/lib/python3.13/site-packages/matplotlib/backend_bases.py", line 1660, in _allow_interrupt
+    old_sigint_handler(*handler_args)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyboardInterrupt

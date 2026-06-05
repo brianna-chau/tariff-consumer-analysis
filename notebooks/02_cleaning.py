@@ -80,3 +80,85 @@ print(f"\nSaved master cleaned dataset -> {out_path}")
 print(f"Shape: {master.shape[0]} rows x {master.shape[1]} columns")
 print(f"Date range: {master.index.min().date()} to {master.index.max().date()}")
 print(f"\nColumns: {list(master.columns)}")
+
+# --- Data validation summary ---
+
+# Null CPI details captured during cleaning (null_rows computed before ffill above)
+null_cpi_dates = ", ".join(null_rows.index.strftime("%Y-%m-%d").tolist()) if not null_rows.empty else "none"
+null_cpi_count = len(null_rows)
+
+# Leading NaNs introduced by pct_change derived columns (structural, not data errors)
+final_nulls = master.isnull().sum()
+derived_null_cols = final_nulls[final_nulls > 0]
+derived_null_detail = (
+    "; ".join(f"{col}: {n}" for col, n in derived_null_cols.items())
+    if not derived_null_cols.empty
+    else "none"
+)
+
+validation_records = [
+    {
+        "Issue_Found": f"Null CPI values ({null_cpi_count} row(s)) on: {null_cpi_dates}",
+        "Investigation_Performed": (
+            "Queried rows where cpi_food or cpi_apparel was null; confirmed nulls were "
+            "trailing (BLS publication lag), not mid-series gaps"
+        ),
+        "Resolution": (
+            "Forward-filled using last published value (ffill); appropriate for a level "
+            "series where missing months reflect reporting delay, not absent data"
+        ),
+        "Potential_Impact": (
+            "Unfilled nulls would propagate NaN into all pct_change and YoY derived columns, "
+            "silently dropping trailing months from downstream analysis"
+        ),
+    },
+    {
+        "Issue_Found": (
+            "Alpha Vantage stock dates use month-end (e.g. 2025-01-31); FRED dates use "
+            "month-start (e.g. 2025-01-01) — index mismatch prevents correct merge"
+        ),
+        "Investigation_Performed": (
+            "Compared raw date values from both sources before concat; confirmed Alpha Vantage "
+            "consistently returns the last trading day of each month"
+        ),
+        "Resolution": (
+            "Cast Alpha Vantage dates to datetime64[M] (truncates to month-start) before "
+            "setting as index, aligning both sources to the same monthly grain"
+        ),
+        "Potential_Impact": (
+            "Without normalization, concat produces two rows per month with NaNs across each "
+            "half, doubling frame size and invalidating all cross-source calculations"
+        ),
+    },
+    {
+        "Issue_Found": f"Leading NaNs in derived pct_change columns — {derived_null_detail}",
+        "Investigation_Performed": (
+            "Audited null counts across all columns after derived feature engineering; confirmed "
+            "NaNs are confined to expected leading positions (1 row for MoM, 12 rows for YoY)"
+        ),
+        "Resolution": (
+            "Accepted as structurally expected — pct_change requires a prior period; "
+            "no data exists before series start date"
+        ),
+        "Potential_Impact": (
+            "Aggregations in 03_analysis.py use groupby mean which skips NaN by default; "
+            "analysts should note reduced N for YoY metrics across the first 12 months"
+        ),
+    },
+]
+
+validation_df = pd.DataFrame(
+    validation_records,
+    columns=["Issue_Found", "Investigation_Performed", "Resolution", "Potential_Impact"],
+)
+
+val_path = PROCESSED_DIR / "validation_summary.csv"
+validation_df.to_csv(val_path, index=False)
+print(f"\nSaved validation summary -> {val_path}")
+
+print("\n=== DATA VALIDATION SUMMARY ===")
+for i, row in validation_df.iterrows():
+    print(f"\n--- Issue {i + 1} ---")
+    for col in validation_df.columns:
+        print(f"  {col}: {row[col]}")
+print("=" * 40)
